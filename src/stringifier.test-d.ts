@@ -2,7 +2,7 @@ import { assertType, it } from "vitest";
 import { type Stringified, stringifier } from "./stringifier.ts";
 
 it("forbids stringifying invalid types", () => {
-	const stringifyURL = stringifier<URL>((value) => value.toString());
+	const stringifyURL = stringifier<URL, string>((value) => value.toString());
 
 	// @ts-expect-error
 	stringifyURL();
@@ -28,4 +28,41 @@ it("narrows the type", () => {
 
 	const brandedBigInt = stringifyBigInt(7777n as BrandedBigInt);
 	assertType<Stringified<BrandedBigInt>>(brandedBigInt);
+});
+
+it("allows using interfaces", () => {
+	type Allowed = string;
+	type Forbidden = number;
+	const stringify = stringifier<Allowed, Forbidden>((value) =>
+		value.toString(),
+	);
+
+	interface Value {
+		foo: string;
+	}
+	const value: Value = {
+		foo: "value",
+	};
+	const result = stringify(value);
+	assertType<Stringified<Value>>(result);
+});
+
+it("forbids stringifying invalid interfaces", () => {
+	type Allowed = string;
+	type Forbidden = number;
+	const stringify = stringifier<Allowed, Forbidden>((value) =>
+		value.toString(),
+	);
+
+	interface Value {
+		foo: string;
+		bar: number;
+	}
+	const value: Value = {
+		foo: "value",
+		bar: 7777,
+	};
+	// @ts-expect-error
+	const result = stringify(value);
+	assertType<Stringified<Value>>(result);
 });

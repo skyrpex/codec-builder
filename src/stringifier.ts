@@ -1,22 +1,26 @@
-export type Serializable<T, Allowed> = T extends Allowed
-	? T
-	: T extends { [key: string]: unknown }
-		? {
-				[P in keyof T]: Serializable<T[P], Allowed>;
-			}
-		: never;
+import type { Opaque } from "opaque-type";
 
-declare const symbol: unique symbol;
-export type Stringified<T> = string & { readonly [symbol]: T };
+export type Serializable<T, Allowed, Forbidden> = unknown extends T
+	? never
+	: T extends Forbidden
+		? never
+		: T extends Allowed
+			? T
+			: {
+					[P in keyof T]: Serializable<T[P], Allowed, Forbidden>;
+				};
 
-export type Stringifier<Allowed> = <T>(
-	value: Serializable<T, Allowed>,
+declare const type: unique symbol;
+export type Stringified<T> = Opaque<string, { readonly [type]: T }>;
+
+export type Stringifier<Allowed, Forbidden> = <T>(
+	value: Serializable<T, Allowed, Forbidden>,
 ) => Stringified<T>;
 
-export const stringifier = <Allowed>(
+export const stringifier = <Allowed, Forbidden = never>(
 	fn: (value: Allowed) => string,
-): Stringifier<Allowed> => {
-	return <T>(value: Serializable<T, Allowed>) => {
+): Stringifier<Allowed, Forbidden> => {
+	return <T>(value: Serializable<T, Allowed, Forbidden>) => {
 		// @ts-expect-error - we know that the value is allowed
 		return fn(value) as Stringified<T>;
 	};
