@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/skyrpex/codec-builder/compare/v1.0.0...v1.0.1) (2025-02-07)
+
+
+### Bug Fixes
+
+* allow defining forbidden types ([a99d1d7](https://github.com/skyrpex/codec-builder/commit/a99d1d75d587f4300f5abc4864b38950ece3045b))
+
 ## 1.0.0 (2025-02-07)
 
 
