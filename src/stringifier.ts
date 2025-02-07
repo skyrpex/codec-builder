@@ -1,5 +1,10 @@
 import type { Opaque } from "opaque-type";
 
+export type SerializableRecord<T> =
+	| T
+	| T[]
+	| { [key: string]: SerializableRecord<T> };
+
 export type Serializable<T, Allowed, Forbidden> = unknown extends T
 	? never
 	: T extends Forbidden
