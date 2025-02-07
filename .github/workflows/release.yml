@@ -1,0 +1,37 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check release
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+      - name: Checkout
+        uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Install dependencies
+        run: npm ci
+        if: ${{ steps.release.outputs.release_created }}
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+        if: ${{ steps.release.outputs.release_created }}
