@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/skyrpex/codec-builder/compare/v1.0.1...v1.1.0) (2025-02-07)
+
+
+### Features
+
+* add SerializableRecord ([4816c50](https://github.com/skyrpex/codec-builder/commit/4816c5038c0c04c829b28ad655bccd4be6d5e76d))
+
 ## [1.0.1](https://github.com/skyrpex/codec-builder/compare/v1.0.0...v1.0.1) (2025-02-07)
 
 
