@@ -1,6 +1,6 @@
 {
 	"name": "codec-builder",
-	"version": "1.0.1",
+	"version": "1.1.0",
 	"description": "Builder package for type-safe codec implementations",
 	"author": {
 		"name": "Cristian Pallarés",
